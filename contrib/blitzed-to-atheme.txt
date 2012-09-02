@@ -1,0 +1,117 @@
+GENERAL
+-------
+
+- Blitzed SHA1 hashes require > 51 bytes. This requires changing
+  Atheme's common.h PASSLEN field to something more like 80.
+
+- The rawsha1 module in atheme does not support salt. A 
+  new saltedsha1 module has been created to support Blitzed 
+  salted hashes.
+
+NICKSERV
+--------
+
+- Blitzed linked nicks are are full fledged nick registrations. 
+  Atheme linked nicks are 'grouped' to an 'account', and inherit 
+  the account's properties.
+
+  Any children nicks in blitzed have been linked to their 
+  parent nick. This means that any meta data (e.g. flags) 
+  the child have are lost. They will inherit the settings 
+  of their parent.
+
+- URLs associated with Blitzed nicks have been converted to 
+  meta data fields on the nick of type 'url'.
+
+- Both the access and enforce module need to be enabled for 
+  blitzed style access and enforce lists.
+
+- Blitzed has a "access list number" that was lost when converting 
+  to atheme format. Atheme has ACCESS DEL <mask> instead of 
+  ACCESS DEL <num> like blitzed. 
+
+- SENDPASS exists as a module, but there is no SET SENDPASS to 
+  allow or deny on a nick
+
+- AUTOJOIN no longer exists
+
+- FORBID exists on Atheme, but unlike Blitzed it's reversible. Blitzed 
+  drops all useful meta data on a user before forbidding them. Because 
+  of this, the forbidden nicks were not converted.
+
+- SET HIDEEMAIL, EMAIL, ENFORCE, NOOP
+   have been converted
+- SET PRIVATE has changed. The old functionality no longer 
+  applies, because nick lists are hidden.
+- SET HIDE has been converted to the new SET PRIVATE. Any user 
+  with SET HIDE on MASK or QUIT will have SET PRIVATE set on
+  the converted account. 
+- SET COORDS is now a property 'coords'. This could be pulled into 
+  a module for easier setting
+- SET IRCOP  no longer exists
+- SET SECURE no longer exists and is implicitly on for all users
+- SET HIDE no longer exists
+- SET SENDPASS no longer exists, but SET MARK will protect an 
+  account from being sendpassed or set pass, unless FORCE is
+  used on the SENDPASS command. 
+- SET AUTOJOIN no longer exists
+- SET NOEXPIRE is now SET HOLD. Any users with SET IRCOP have 
+  a SET HOLD flag added on conversion. Marked accounts are not 
+  exempt from expiration.
+- SET REGTIME no longer exists
+- SET LANGUAGE exists, but the only targets are currently en. All 
+  accounts will be converted to English.
+- FORBID is a contrib module. The data has been converted over, 
+  with a forbider of "services", a forbid time of now(), and 
+  the original forbid reason.
+- SUSPEND is now SET FREEZE, and these data have not been converted. 
+
+CHANSERV
+--------
+
+- FOUNDER pass no longer exists. Ownership is by founder only.
+- SUCCESSOR still exists and has been converted
+
+- URL and DESCRIPTION no longer exist and have been converted 
+  as properties
+
+- AUTOLIMIT no longer exists
+- SET TOPICPREFIX no longer exists. TOPICPREFIX on atheme 
+  is an action, not a setting
+
+- MLOCK +R is now +r
+- MLOCK +O needs charybdis extensions/chm_operonly.c +O 
+ 
+- SET SECURE is implied
+- SET SECUREOPS is now SET SECURE
+- SET LEAVEOPS no longer exists
+
+- The AKICK level has been deprecated and AKICK set access in 
+  atheme is given to anyway with ACL change access. Anyone with 
+  AKICK access is given the +r flag
+- The UNBAN level is deprecated, and cannot be carried over because 
+  UNBAN -and- BAN are combined in atheme as the +r flag.
+- LEVEL LIST and LEVEL CHANGE are deprecated
+- SYNC command is deprecated
+- KICK access is deprecated and now falls under +r
+
+- Flags for all nicks associated with an account are combined.
+  Because of this combining, modification times for these flags 
+  are set to now()
+- Founder gets flags +AFORfiorstv
+- Access flags for channel access lists for each user are created 
+  based on the user's original level, and the level settings 
+  for their channel
+
+OPERSERV
+--------
+
+- Quarantine list has been convered to RWATCH entries with kline
+  and case sensitivity.
+
+MEMOSERV
+--------
+
+- Blitzed does not keep track of memo read state, but Atheme does.
+  On conversion, all memos have been marked READ.
+ 

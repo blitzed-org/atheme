@@ -12,7 +12,8 @@ SRCS =			\
 	posix.c		\
 	ircservices.c		\
 	rawmd5.c		\
-	rawsha1.c
+	rawsha1.c		\
+	saltedsha1.c
 
 include ../../extra.mk
 include ../../buildsys.mk
